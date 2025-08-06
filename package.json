@@ -1,0 +1,91 @@
+{
+  "name": "ai-docstring-generator",
+  "displayName": "AI Docstring Generator",
+  "description": "Generate intelligent docstrings using Azure OpenAI",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:csharp",
+    "onLanguage:python",
+    "onLanguage:typescript"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aiDocstring.generateAtCursor",
+        "title": "Generate Docstring at Cursor",
+        "category": "AI Docstring"
+      },
+      {
+        "command": "aiDocstring.generateForFile",
+        "title": "Generate Docstrings for File",
+        "category": "AI Docstring"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "aiDocstring.generate",
+          "group": "1_modification",
+          "when": "editorTextFocus"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "aiDocstring.generate",
+        "key": "ctrl+alt+d",
+        "mac": "cmd+alt+d",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "AI Docstring Generator",
+      "properties": {
+        "aiDocstring.azureOpenAI.endpoint": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI endpoint URL"
+        },
+        "aiDocstring.azureOpenAI.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI API key"
+        },
+        "aiDocstring.model": {
+          "type": "string",
+          "default": "gpt-4",
+          "description": "Model to use for generation"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "@types/chai": "^5.2.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/proxyquire": "^1.3.31",
+    "@types/vscode": "^1.84.0",
+    "chai": "^5.2.1",
+    "mocha": "^10.2.0",
+    "proxyquire": "^2.1.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "openai": "^4.52.0"
+  }
+}
