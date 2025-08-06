@@ -36,7 +36,7 @@
     "menus": {
       "editor/context": [
         {
-          "command": "aiDocstring.generate",
+          "command": "aiDocstring.generateForFile",
           "group": "1_modification",
           "when": "editorTextFocus"
         }
@@ -44,7 +44,7 @@
     },
     "keybindings": [
       {
-        "command": "aiDocstring.generate",
+        "command": "aiDocstring.generateForFile",
         "key": "ctrl+alt+d",
         "mac": "cmd+alt+d",
         "when": "editorTextFocus"

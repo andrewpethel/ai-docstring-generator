@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
     const parser = new CSharpParser();
     
     // Command: Generate docstring for current function/method
-    let generateCommand = vscode.commands.registerCommand('aiDocstring.generate', async () => {
+    let generateAtCursor = vscode.commands.registerCommand('aiDocstring.generateAtCursor', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showWarningMessage('No active editor found');
@@ -64,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
     
     // Command: Generate docstrings for entire file
-    let generateFileCommand = vscode.commands.registerCommand('aiDocstring.generateFile', async () => {
+    let generateForFile = vscode.commands.registerCommand('aiDocstring.generateForFile', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showWarningMessage('No active editor found');
@@ -129,7 +129,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage(`Generated ${undocumented.length} docstrings!`);
     });
     
-    context.subscriptions.push(generateCommand, generateFileCommand);
+    context.subscriptions.push(generateAtCursor, generateForFile);
 }
 
 export function deactivate() {}
