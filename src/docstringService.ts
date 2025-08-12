@@ -6,44 +6,49 @@ import { getTemplate } from './templates';
 export class DocstringService {
     private client: AzureOpenAI | null = null;
     private context: vscode.ExtensionContext;
-    
+    private deploymentName: string = 'gpt-4';
+
     constructor(context: vscode.ExtensionContext) {
         this.context = context;
         this.initializeClient();
     }
-    
+
     private initializeClient() {
         const config = vscode.workspace.getConfiguration('aiDocstring');
         const endpoint = config.get<string>('azureOpenAI.endpoint');
         const apiKey = config.get<string>('azureOpenAI.apiKey');
-        const deploymentName = config.get<string>('azureOpenAI.deploymentName') || 'gpt-4';
-        
+        this.deploymentName = config.get<string>('model') || 'gpt-4';
+
         if (endpoint && apiKey) {
+            // Make sure the endpoint ends with a slash
+            const normalizedEndpoint = endpoint.endsWith('/') ? endpoint : endpoint + '/';
+            
             this.client = new AzureOpenAI({
-                endpoint,
-                apiKey,
-                apiVersion: '2023-05-15',
-                deployment: deploymentName
+                endpoint: normalizedEndpoint,
+                apiKey: apiKey,
+                apiVersion: "2024-02-01",
+                deployment: this.deploymentName
             });
+        } else {
+            console.warn('Azure OpenAI endpoint and API key not configured. Using mock responses.');
         }
     }
-    
+
     async generateDocstring(
-        code: string, 
-        language: string, 
+        code: string,
+        language: string,
         elementType: string
     ): Promise<string> {
         if (!this.client) {
             // For demo purposes, return a mock response if no API key
             return this.getMockDocstring(code, language, elementType);
         }
-        
+
         const prompt = this.buildPrompt(code, language, elementType);
-        const model = vscode.workspace.getConfiguration('aiDocstring').get<string>('model') || 'gpt-4';
-        
+
         try {
             const result = await this.client.chat.completions.create({
-                model: model,
+                model: this.deploymentName,
                 messages: [
                     {
                         role: "system",
@@ -57,19 +62,19 @@ export class DocstringService {
                 temperature: 0.3,
                 max_tokens: 500
             });
-            
+
             const docstring = result.choices[0].message?.content || '';
             return this.formatDocstring(docstring, language);
-            
+
         } catch (error) {
             console.error('Failed to generate docstring:', error);
             throw error;
         }
     }
-    
+
     private buildPrompt(code: string, language: string, elementType: string): string {
         const template = getTemplate(language, elementType);
-        
+
         return `Generate a ${language} docstring for this ${elementType}:
 
 ${code}
@@ -87,19 +92,19 @@ Requirements:
 
 Return only the docstring, no additional text.`;
     }
-    
+
     private formatDocstring(docstring: string, language: string): string {
         // Clean up any markdown formatting from the AI response
         let cleaned = docstring.trim();
-        
+
         // Remove code block markers if present
         cleaned = cleaned.replace(/^```[a-z]*\n?/, '');
         cleaned = cleaned.replace(/\n?```$/, '');
-        
+
         // Ensure proper indentation will be handled by the editor
         return cleaned;
     }
-    
+
     // Mock response for demo without API key
     private getMockDocstring(code: string, language: string, elementType: string): string {
         if (language === 'csharp') {
@@ -116,7 +121,7 @@ Return only the docstring, no additional text.`;
         /// </summary>`;
             }
         }
-        
+
         return '// TODO: Add documentation';
     }
 }

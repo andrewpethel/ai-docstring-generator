@@ -62,6 +62,7 @@ code --install-extension ai-docstring-generator-0.1.0.vsix
 
 ## ⚙️ Configuration
 
+
 ### Azure OpenAI Setup
 Add your Azure OpenAI credentials in VS Code settings:
 
@@ -69,7 +70,7 @@ Add your Azure OpenAI credentials in VS Code settings:
 {
   "aiDocstring.azureOpenAI.endpoint": "https://your-resource.openai.azure.com/",
   "aiDocstring.azureOpenAI.apiKey": "your-api-key",
-  "aiDocstring.azureOpenAI.deploymentName": "gpt-4"
+  "aiDocstring.model": "your-deployment-name"
 }
 ```
 
@@ -77,22 +78,29 @@ Add your Azure OpenAI credentials in VS Code settings:
 
 ## 🎯 Usage
 
+
 ### Commands Available
 
-1. **Generate Documentation at Cursor**
-   - Command: `AI Docstring: Generate Documentation`
-   - Places documentation above the current code element
+1. **Generate Docstring at Cursor**
+  - Command: `AI Docstring: Generate Docstring at Cursor`
+  - Places documentation above the current code element
 
-2. **Generate Documentation for All in File**
-   - Command: `AI Docstring: Generate for All Undocumented`
-   - Processes entire file and adds documentation where missing
+2. **Generate Docstrings for File**
+  - Command: `AI Docstring: Generate Docstrings for File`
+  - Processes entire file and adds documentation where missing
+
+3. **Clean Up Duplicate Docstrings**
+  - Command: `AI Docstring: Clean Up Duplicate Docstrings`
+  - Removes misplaced or duplicate docstrings and formats the file
+
 
 ### How to Use
 
 1. Open a C# file in VS Code
 2. Place your cursor on a method, class, property, or interface
 3. Open Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
-4. Run "AI Docstring: Generate Documentation"
+4. Run "AI Docstring: Generate Docstring at Cursor" or "AI Docstring: Generate Docstrings for File"
+5. (Optional) Run "AI Docstring: Clean Up Duplicate Docstrings" to tidy up documentation
 
 ## 🌍 Language Support
 
@@ -108,18 +116,20 @@ Add your Azure OpenAI credentials in VS Code settings:
 - 🔄 **Python** - Docstrings
 - 🔄 **Java** - Javadoc
 
+
 ## 🏗️ Architecture
 
 The extension consists of several key components:
 
-- **`extension.ts`** - VS Code extension entry point and command registration
-- **`csharpParser.ts`** - Parses C# code to identify documentable elements
-- **`docstringService.ts`** - Handles AI communication and documentation generation
-- **`templates.ts`** - Provides language-specific documentation templates
+- **`src/extension.ts`** - VS Code extension entry point and command registration
+- **`src/csharpParser.ts`** - Parses C# code to identify documentable elements
+- **`src/docstringService.ts`** - Handles AI communication and documentation generation
+- **`src/templates.ts`** - Provides language-specific documentation templates
+
 
 ## 🧪 Testing
 
-The project includes unit tests using Mocha and Chai:
+The project includes unit tests using Mocha and Chai (see the `tests/` directory):
 
 ```bash
 # Run tests
@@ -127,6 +137,9 @@ npm test
 
 # Note: Tests use mocked VS Code API for isolated testing
 ```
+## 📊 Docstring Assessment Feature
+
+The extension can generate a Markdown assessment report of your code's docstring quality, using industry-standard criteria for C# XML documentation. Look for files like `SampleCodeWithoutComments_Assessment.md` in your project root after running the assessment command.
 
 ## 🤝 Contributing
 
@@ -192,4 +205,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Note**: This is a hackathon project from 2025. It requires an Azure OpenAI subscription for full functionality. The extension will use mock responses if no API credentials are configured.
+**Note**: This is a hackathon project from 2025. It requires an Azure OpenAI subscription for full functionality. The extension will use mock responses if no API credentials are configured (for local/test use only).
