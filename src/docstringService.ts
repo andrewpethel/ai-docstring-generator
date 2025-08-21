@@ -26,7 +26,7 @@ export class DocstringService {
             this.client = new AzureOpenAI({
                 endpoint: normalizedEndpoint,
                 apiKey: apiKey,
-                apiVersion: "2024-02-01",
+                apiVersion: "2024-12-01-preview",
                 deployment: this.deploymentName
             });
         } else {
