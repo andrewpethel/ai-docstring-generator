@@ -44,7 +44,7 @@ public async Task<User> GetUserByIdAsync(int userId, bool includeDeleted = false
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/vscode-docstring-generator.git
-cd vscode-docstring-generator
+cd ai-docstring-generator
 
 # Install dependencies
 npm install
